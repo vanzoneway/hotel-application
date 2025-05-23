@@ -1,6 +1,7 @@
 package by.vanzoneway.hotelapp.controller.impl;
 
 import by.vanzoneway.hotelapp.controller.HotelOperations;
+import by.vanzoneway.hotelapp.dto.filter.HotelFilter;
 import by.vanzoneway.hotelapp.dto.response.HotelFullyResponseDto;
 import by.vanzoneway.hotelapp.dto.response.HotelShortResponseDto;
 import by.vanzoneway.hotelapp.service.HotelService;
@@ -27,5 +28,10 @@ public class HotelController implements HotelOperations {
     @GetMapping("/hotels/{id}")
     public HotelFullyResponseDto getHotel(@PathVariable("id") final Long id) {
         return this.hotelService.getHotel(id);
+    }
+
+    @GetMapping("/search")
+    public List<HotelShortResponseDto> searchHotels(final HotelFilter hotelFilter) {
+        return this.hotelService.searchHotels(hotelFilter);
     }
 }
