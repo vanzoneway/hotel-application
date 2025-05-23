@@ -6,5 +6,5 @@ public record HotelShortResponseDto(
         String description,
         String address,
         String phone) {
-    
+
 }
