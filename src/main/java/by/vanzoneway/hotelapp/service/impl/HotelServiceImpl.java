@@ -1,15 +1,16 @@
 package by.vanzoneway.hotelapp.service.impl;
 
-import by.vanzoneway.hotelapp.dto.enums.HistogramParameter;
 import by.vanzoneway.hotelapp.dto.filter.HotelFilter;
 import by.vanzoneway.hotelapp.dto.request.HotelCreateRequestDto;
 import by.vanzoneway.hotelapp.dto.response.HotelFullyResponseDto;
 import by.vanzoneway.hotelapp.dto.response.HotelShortResponseDto;
 import by.vanzoneway.hotelapp.exception.hotel.HotelNotFoundException;
+import by.vanzoneway.hotelapp.exception.hotel.InvalidHistogramParamException;
 import by.vanzoneway.hotelapp.mapper.HotelMapper;
 import by.vanzoneway.hotelapp.model.entity.Hotel;
 import by.vanzoneway.hotelapp.repository.HotelRepository;
 import by.vanzoneway.hotelapp.service.HotelService;
+import by.vanzoneway.hotelapp.service.util.HistogramParameter;
 import by.vanzoneway.hotelapp.specification.HotelSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static by.vanzoneway.hotelapp.constants.ExceptionMessageKeys.HOTEL_NOT_FOUND_MESSAGE_KEY;
+import static by.vanzoneway.hotelapp.constants.ExceptionMessageKeys.INVALID_HISTOGRAM_PARAM_MESSAGE_KEY;
 
 @Service
 @RequiredArgsConstructor
@@ -69,14 +71,21 @@ public class HotelServiceImpl implements HotelService {
     }
 
     public Map<String, Long> getHistogram(String param) {
-        HistogramParameter parameter = HistogramParameter.fromString(param);
-
-        return convertResults(switch (parameter) {
-            case BRAND -> hotelRepository.countByBrand();
-            case CITY -> hotelRepository.countByCity();
-            case COUNTRY -> hotelRepository.countByCountry();
-            case AMENITIES -> hotelRepository.countByAmenities();
-        });
+        try {
+            HistogramParameter parameter = HistogramParameter.fromStringWithValidation(param);
+            return convertResults(switch (parameter) {
+                case BRAND -> hotelRepository.countByBrand();
+                case CITY -> hotelRepository.countByCity();
+                case COUNTRY -> hotelRepository.countByCountry();
+                case AMENITIES -> hotelRepository.countByAmenities();
+            });
+        } catch (IllegalArgumentException e) {
+            throw new InvalidHistogramParamException(messageSource.getMessage(
+                    INVALID_HISTOGRAM_PARAM_MESSAGE_KEY,
+                    new Object[]{param},
+                    LocaleContextHolder.getLocale()
+            ));
+        }
     }
 
     private Map<String, Long> convertResults(List<Object[]> results) {

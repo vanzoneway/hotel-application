@@ -3,11 +3,13 @@ package by.vanzoneway.hotelapp.exception;
 import by.vanzoneway.hotelapp.constants.ApplicationConstants;
 import by.vanzoneway.hotelapp.exception.dto.ApiExceptionDto;
 import by.vanzoneway.hotelapp.exception.hotel.HotelNotFoundException;
+import by.vanzoneway.hotelapp.exception.hotel.InvalidHistogramParamException;
 import by.vanzoneway.hotelapp.exception.violation.ValidationErrorResponse;
 import by.vanzoneway.hotelapp.exception.violation.Violation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,6 +21,15 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler({InvalidHistogramParamException.class, HttpMessageNotReadableException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiExceptionDto handle400(final Exception e) {
+        return new ApiExceptionDto(
+                HttpStatus.BAD_REQUEST,
+                e.getMessage(),
+                LocalDateTime.now());
+    }
 
     @ExceptionHandler(HotelNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

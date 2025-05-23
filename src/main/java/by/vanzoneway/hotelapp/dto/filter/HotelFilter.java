@@ -9,4 +9,5 @@ public record HotelFilter(
         Set<String> country,
         Set<String> amenities
 ) {
+
 }

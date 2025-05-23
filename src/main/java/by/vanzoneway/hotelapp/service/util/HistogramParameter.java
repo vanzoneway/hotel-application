@@ -1,6 +1,10 @@
-package by.vanzoneway.hotelapp.dto.enums;
+package by.vanzoneway.hotelapp.service.util;
 
+import lombok.Getter;
+
+@Getter
 public enum HistogramParameter {
+
     BRAND("brand"),
     CITY("city"),
     COUNTRY("country"),
@@ -12,16 +16,12 @@ public enum HistogramParameter {
         this.paramName = paramName;
     }
 
-    public String getParamName() {
-        return paramName;
-    }
-
-    public static HistogramParameter fromString(String param) {
+    public static HistogramParameter fromStringWithValidation(String param) {
         for (HistogramParameter value : values()) {
             if (value.paramName.equalsIgnoreCase(param)) {
                 return value;
             }
         }
-        throw new IllegalArgumentException("Unsupported parameter: " + param);
+        throw new IllegalArgumentException();
     }
 }

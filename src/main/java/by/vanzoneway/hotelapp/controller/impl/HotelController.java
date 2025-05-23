@@ -44,20 +44,20 @@ public class HotelController implements HotelOperations {
 
     @PostMapping("/hotels")
     @ResponseStatus(HttpStatus.CREATED)
-    public HotelShortResponseDto createHotel(@RequestBody HotelCreateRequestDto createDto) {
-        return service.createHotel(createDto);
+    public HotelShortResponseDto createHotel(@RequestBody final HotelCreateRequestDto createDto) {
+        return this.service.createHotel(createDto);
     }
 
     @PostMapping("/hotels/{id}/amenities")
     @ResponseStatus(HttpStatus.CREATED)
     public HotelFullyResponseDto addAmenities(
-            @PathVariable("id") Long hotelId,
-            @RequestBody Set<String> amenities) {
-        return service.addAmenities(hotelId, amenities);
+            @PathVariable("id") final Long hotelId,
+            @RequestBody final Set<String> amenities) {
+        return this.service.addAmenities(hotelId, amenities);
     }
 
     @GetMapping("/histogram/{param}")
-    public Map<String, Long> getHistogram(@PathVariable("param") String param) {
-        return service.getHistogram(param);
+    public Map<String, Long> getHistogram(@PathVariable("param") final String param) {
+        return this.service.getHistogram(param);
     }
 }

@@ -4,11 +4,13 @@ import by.vanzoneway.hotelapp.dto.filter.HotelFilter;
 import by.vanzoneway.hotelapp.model.entity.Hotel;
 import by.vanzoneway.hotelapp.model.entity.HotelInformation;
 import by.vanzoneway.hotelapp.model.entity.embedded.Address;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
 import java.util.Set;
 
 @UtilityClass
@@ -67,9 +69,21 @@ public class HotelSpecifications {
     }
 
     private Specification<Hotel> byAmenities(Set<String> amenities) {
-        return (root, query, cb) ->
-                amenities == null || amenities.isEmpty() ?
-                        cb.conjunction() :
-                        root.join("amenities").in(amenities);
+        return (root, query, cb) -> {
+            if (amenities == null || amenities.isEmpty()) {
+                return cb.conjunction();
+            }
+            Expression<String> amenitiesExpression = root.join("amenities");
+            List<Predicate> predicates = amenities.stream()
+                    .map(amenity -> {
+                        String searchPattern = "%" + amenity.toLowerCase() + "%";
+                        return cb.like(
+                                cb.lower(amenitiesExpression),
+                                searchPattern
+                        );
+                    })
+                    .toList();
+            return cb.or(predicates.toArray(new Predicate[0]));
+        };
     }
 }
