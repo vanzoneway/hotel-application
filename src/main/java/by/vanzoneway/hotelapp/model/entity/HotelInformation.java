@@ -1,7 +1,9 @@
 package by.vanzoneway.hotelapp.model.entity;
 
 import by.vanzoneway.hotelapp.model.BaseEntity;
-import jakarta.persistence.Column;
+import by.vanzoneway.hotelapp.model.entity.embedded.Address;
+import by.vanzoneway.hotelapp.model.entity.embedded.Contact;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -14,33 +16,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "hotel_contact")
+@Table(name = "hotel_information")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelContact extends BaseEntity {
+public class HotelInformation extends BaseEntity {
 
-    @Column(name = "phone")
-    private String phone;
+    @Embedded
+    private Contact contacts;
 
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "house_number")
-    private Integer houseNumber;
-
-    @Column(name = "street")
-    private String street;
-
-    @Column(name = "city")
-    private String city;
-
-    @Column(name = "country")
-    private String country;
-
-    @Column(name = "post_code")
-    private String postCode;
+    @Embedded
+    private Address address;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
