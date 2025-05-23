@@ -8,8 +8,8 @@ public record HotelCreateRequestDto(
         String name,
         String description,
         String brand,
-        AddressDto addressDto,
-        ContactDto contactDto,
-        ArrivalTimeDto arrivalTimeDto) {
+        AddressDto address,
+        ContactDto contacts,
+        ArrivalTimeDto arrivalTime) {
 
 }

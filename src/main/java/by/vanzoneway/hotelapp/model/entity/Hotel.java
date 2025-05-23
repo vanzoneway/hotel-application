@@ -2,6 +2,7 @@ package by.vanzoneway.hotelapp.model.entity;
 
 import by.vanzoneway.hotelapp.model.BaseEntity;
 import by.vanzoneway.hotelapp.model.entity.embedded.ArrivalTime;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -37,7 +38,7 @@ public class Hotel extends BaseEntity {
     @Embedded
     ArrivalTime arrivalTime;
 
-    @OneToOne(mappedBy = "hotel")
+    @OneToOne(mappedBy = "hotel", cascade = CascadeType.PERSIST)
     private HotelInformation hotelInformation;
 
     @ElementCollection
