@@ -70,6 +70,7 @@ public class HotelServiceImpl implements HotelService {
         return hotelMapper.toHotelFullyResponseDto(hotel);
     }
 
+    @Transactional(readOnly = true)
     public Map<String, Long> getHistogram(String param) {
         try {
             HistogramParameter parameter = HistogramParameter.fromStringWithValidation(param);
