@@ -38,43 +38,43 @@ public class HotelServiceImpl implements HotelService {
     @Override
     @Transactional(readOnly = true)
     public List<HotelShortResponseDto> getHotels() {
-        return hotelMapper.toHotelShortResponseDtoList(this.hotelRepository.findAll());
+        return this.hotelMapper.toHotelShortResponseDtoList(this.hotelRepository.findAll());
     }
 
     @Override
     @Transactional(readOnly = true)
     public HotelFullyResponseDto getHotel(final Long id) {
-        return hotelMapper.toHotelFullyResponseDto(getHotelOrThrowException(id));
+        return this.hotelMapper.toHotelFullyResponseDto(getHotelOrThrowException(id));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<HotelShortResponseDto> searchHotels(HotelFilter hotelFilter) {
+    public List<HotelShortResponseDto> searchHotels(final HotelFilter hotelFilter) {
         Specification<Hotel> spec = HotelSpecifications.applyFilters(hotelFilter);
-        return hotelMapper.toHotelShortResponseDtoList(this.hotelRepository.findAll(spec));
+        return this.hotelMapper.toHotelShortResponseDtoList(this.hotelRepository.findAll(spec));
     }
 
     @Override
     @Transactional
-    public HotelShortResponseDto createHotel(HotelCreateRequestDto createDto) {
+    public HotelShortResponseDto createHotel(final HotelCreateRequestDto createDto) {
         Hotel hotel = hotelMapper.toHotelWithInformation(createDto);
         Hotel savedHotel = hotelRepository.save(hotel);
-        return hotelMapper.toHotelShortResponseDto(savedHotel);
+        return this.hotelMapper.toHotelShortResponseDto(savedHotel);
     }
 
     @Override
     @Transactional
-    public HotelFullyResponseDto addAmenities(Long id, Set<String> amenities) {
+    public HotelFullyResponseDto addAmenities(final Long id, final Set<String> amenities) {
         Hotel hotel = getHotelOrThrowException(id);
         hotel.getAmenities().addAll(amenities);
-        return hotelMapper.toHotelFullyResponseDto(hotel);
+        return this.hotelMapper.toHotelFullyResponseDto(hotel);
     }
 
     @Transactional(readOnly = true)
-    public Map<String, Long> getHistogram(String param) {
+    public Map<String, Long> getHistogram(final String param) {
         try {
             HistogramParameter parameter = HistogramParameter.fromStringWithValidation(param);
-            return convertResults(switch (parameter) {
+            return this.convertResults(switch (parameter) {
                 case BRAND -> hotelRepository.countByBrand();
                 case CITY -> hotelRepository.countByCity();
                 case COUNTRY -> hotelRepository.countByCountry();
@@ -89,7 +89,7 @@ public class HotelServiceImpl implements HotelService {
         }
     }
 
-    private Map<String, Long> convertResults(List<Object[]> results) {
+    private Map<String, Long> convertResults(final List<Object[]> results) {
         return results.stream()
                 .collect(Collectors.toMap(
                         arr -> (String) arr[0],
@@ -97,7 +97,7 @@ public class HotelServiceImpl implements HotelService {
                 ));
     }
 
-    private Hotel getHotelOrThrowException(Long id) {
+    private Hotel getHotelOrThrowException(final Long id) {
         return this.hotelRepository.findById(id)
                 .orElseThrow(() -> new HotelNotFoundException(
                         messageSource.getMessage(

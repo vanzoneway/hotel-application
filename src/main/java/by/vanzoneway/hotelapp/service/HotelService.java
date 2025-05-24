@@ -17,9 +17,9 @@ public interface HotelService {
 
     List<HotelShortResponseDto> searchHotels(final HotelFilter hotelFilter);
 
-    HotelShortResponseDto createHotel(HotelCreateRequestDto createDto);
+    HotelShortResponseDto createHotel(final HotelCreateRequestDto createDto);
 
-    HotelFullyResponseDto addAmenities(Long id, Set<String> amenities);
+    HotelFullyResponseDto addAmenities(final Long id, final Set<String> amenities);
 
-    Map<String, Long> getHistogram(String param);
+    Map<String, Long> getHistogram(final String param);
 }
